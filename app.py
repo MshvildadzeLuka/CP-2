@@ -1,8 +1,36 @@
+
 import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from scipy.integrate import solve_ivp
+
+# --- DEPENDENCY SAFETY CHECK ---
+# This prevents the app from crashing if the server is missing requirements.txt
+try:
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib.gridspec as gridspec
+    from scipy.integrate import solve_ivp
+except ModuleNotFoundError as e:
+    st.set_page_config(page_title="Deployment Error", layout="centered")
+    st.error("🚨 **Deployment Configuration Missing!**")
+    st.warning(f"The server is trying to run the app, but it is missing: `{e.name}`")
+    st.markdown("""
+    ### How to fix this in 30 seconds:
+    Streamlit Cloud needs a blueprint to install your math libraries. You are missing a file called `requirements.txt`.
+    
+    1. Go to your **GitHub repository** where this `app.py` file is saved.
+    2. Click **Add file** > **Create new file**.
+    3. Name the file exactly: **`requirements.txt`** (all lowercase).
+    4. Paste these exact 4 lines into the text box:
+    ```text
+    streamlit==1.32.0
+    numpy>=1.24.0
+    scipy>=1.10.0
+    matplotlib>=3.7.0
+    ```
+    5. Click the green **Commit changes** button. 
+    
+    *Once you do this, Streamlit will automatically restart, install the libraries, and your trader dashboard will appear!*
+    """)
+    st.stop()  # Stops the rest of the script from running and crashing
 
 # --- Page Configuration ---
 st.set_page_config(page_title="Momentum Asset Pricing Model", layout="wide")
